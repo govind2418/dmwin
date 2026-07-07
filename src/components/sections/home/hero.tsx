@@ -71,8 +71,8 @@ export function Hero() {
           {headlineWords.map((word, i) => (
             <motion.span
               key={word}
-              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.15 * i, ease: [0.16, 1, 0.3, 1] }}
               className={`inline-block ${i % 2 === 1 ? "text-gradient-blue glow-text" : ""} mr-4`}
             >
