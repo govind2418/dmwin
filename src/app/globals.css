@@ -64,6 +64,7 @@
   --animate-border-spin: border-spin 4s linear infinite;
   --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-gradient-x: gradient-x 6s ease infinite;
+  --animate-twinkle: twinkle 3s ease-in-out infinite;
 
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -297,6 +298,11 @@
 @keyframes gradient-x {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
 
 @property --border-angle {

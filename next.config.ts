@@ -9,13 +9,7 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   experimental: {
-    optimizePackageImports: [
-      "lucide-react",
-      "framer-motion",
-      "@react-three/drei",
-      "@react-three/fiber",
-      "@react-three/postprocessing",
-    ],
+    optimizePackageImports: ["lucide-react", "framer-motion"],
   },
   async headers() {
     return [

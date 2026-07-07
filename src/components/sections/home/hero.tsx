@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, PlayCircle, ChevronDown, Sparkles } from "lucide-react";
-import { HeroScene } from "@/components/three/hero-scene";
+import { StarField } from "@/components/shared/star-field";
 import { AuroraBackground } from "@/components/shared/aurora-background";
 import { PremiumButton } from "@/components/shared/premium-button";
 import { AnimatedCounter } from "@/components/shared/animated-counter";
@@ -28,7 +28,7 @@ export function Hero() {
     <section ref={ref} className="relative flex min-h-[100svh] items-center overflow-hidden pt-28">
       <AuroraBackground />
       <motion.div style={{ y: sceneY }} className="absolute inset-0">
-        <HeroScene />
+        <StarField />
       </motion.div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-abyss to-transparent" />
