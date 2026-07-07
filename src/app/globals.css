@@ -267,8 +267,8 @@
 }
 
 @keyframes aurora {
-  0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.6; }
-  50% { transform: translate(4%, -6%) scale(1.15) rotate(8deg); opacity: 0.9; }
+  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+  50% { transform: translate(4%, -6%); opacity: 0.9; }
 }
 
 @keyframes shimmer {
@@ -277,8 +277,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.5; filter: blur(40px); }
-  50% { opacity: 0.9; filter: blur(60px); }
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.12); }
 }
 
 @keyframes marquee {
