@@ -2,12 +2,19 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, PlayCircle, ChevronDown, Sparkles } from "lucide-react";
+import { ArrowRight, PlayCircle, ChevronDown, Sparkles, LogIn, UserPlus, Download, Send } from "lucide-react";
 import { StarField } from "@/components/shared/star-field";
 import { AuroraBackground } from "@/components/shared/aurora-background";
 import { PremiumButton } from "@/components/shared/premium-button";
 import { AnimatedCounter } from "@/components/shared/animated-counter";
 import { heroStats } from "@/lib/data/content";
+
+const quickActions = [
+  { label: "Login Now", icon: LogIn },
+  { label: "Register", icon: UserPlus },
+  { label: "Download App", icon: Download },
+  { label: "Join Telegram", icon: Send },
+];
 
 const headlineWords = ["Play", "Bold.", "Win", "Big."];
 
@@ -65,6 +72,19 @@ export function Hero() {
         >
           <Sparkles className="size-3.5" />
           India&apos;s Premium Gaming Destination
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap items-center justify-center gap-3"
+        >
+          {quickActions.map((action) => (
+            <PremiumButton key={action.label} type="button" variant="outline" size="sm">
+              <action.icon className="size-4" /> {action.label}
+            </PremiumButton>
+          ))}
         </motion.div>
 
         <h1 className="text-balance font-display text-5xl font-bold leading-[1.05] text-white sm:text-7xl lg:text-8xl">
