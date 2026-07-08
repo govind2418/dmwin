@@ -1,7 +1,6 @@
 "use client";
 
 import { ButtonHTMLAttributes, MouseEvent, ReactNode, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -43,23 +42,11 @@ export function PremiumButton({
   size,
   className,
   children,
-  magnetic = true,
   onClick,
   ...props
 }: PremiumButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
   const [ripples, setRipples] = useState<Ripple[]>([]);
-
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!magnetic || !ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const relX = e.clientX - rect.left - rect.width / 2;
-    const relY = e.clientY - rect.top - rect.height / 2;
-    setPos({ x: relX * 0.25, y: relY * 0.35 });
-  };
-
-  const handleMouseLeave = () => setPos({ x: 0, y: 0 });
 
   const spawnRipple = (e: MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -76,28 +63,17 @@ export function PremiumButton({
         <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover/btn:translate-x-full" />
       )}
       {ripples.map((r) => (
-        <motion.span
+        <span
           key={r.id}
-          className="pointer-events-none absolute rounded-full bg-white/40"
-          style={{ left: r.x, top: r.y }}
-          initial={{ width: 0, height: 0, x: 0, y: 0, opacity: 0.6 }}
-          animate={{ width: 260, height: 260, x: -130, y: -130, opacity: 0 }}
-          transition={{ duration: 0.65, ease: "easeOut" }}
+          className="pointer-events-none absolute size-[260px] animate-ripple rounded-full bg-white/40"
+          style={{ left: r.x - 130, top: r.y - 130 }}
         />
       ))}
     </>
   );
 
   return (
-    <motion.div
-      ref={ref}
-      className="inline-block"
-      animate={{ x: pos.x, y: pos.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 12, mass: 0.4 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseDown={spawnRipple}
-    >
+    <div ref={ref} className="inline-block" onMouseDown={spawnRipple}>
       {href ? (
         <Link href={href} className={cn(buttonStyles({ variant, size }), className)}>
           {content}
@@ -107,6 +83,6 @@ export function PremiumButton({
           {content}
         </button>
       )}
-    </motion.div>
+    </div>
   );
 }

@@ -65,6 +65,7 @@
   --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-gradient-x: gradient-x 6s ease infinite;
   --animate-twinkle: twinkle 3s ease-in-out infinite;
+  --animate-ripple: ripple 0.65s ease-out forwards;
 
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -305,19 +306,13 @@
   50% { opacity: 1; transform: scale(1.2); }
 }
 
+@keyframes ripple {
+  from { transform: scale(0); opacity: 0.6; }
+  to { transform: scale(1); opacity: 0; }
+}
+
 @property --border-angle {
   syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
-}
-
-/* Lenis smooth scroll */
-html.lenis {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
 }

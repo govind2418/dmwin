@@ -1,63 +1,74 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 export function CursorGlow() {
-  const [visible, setVisible] = useState(false);
-  const [isPointer, setIsPointer] = useState(false);
-  const x = useMotionValue(-200);
-  const y = useMotionValue(-200);
-  const springX = useSpring(x, { damping: 28, stiffness: 220, mass: 0.5 });
-  const springY = useSpring(y, { damping: 28, stiffness: 220, mass: 0.5 });
-  const hasFinePointer = useRef(true);
+  const dotRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const rafId = useRef<number | null>(null);
+  const pos = useRef({ x: -200, y: -200 });
+  const isPointer = useRef(false);
 
   useEffect(() => {
-    hasFinePointer.current = window.matchMedia("(pointer: fine)").matches;
-    if (!hasFinePointer.current) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    const apply = () => {
+      rafId.current = null;
+      const dot = dotRef.current;
+      const glow = glowRef.current;
+      if (!dot || !glow) return;
+      const { x, y } = pos.current;
+      const dotScale = isPointer.current ? 1.8 : 1;
+      const glowScale = isPointer.current ? 1.55 : 1;
+      dot.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${dotScale})`;
+      glow.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${glowScale})`;
+      glow.style.opacity = "1";
+    };
+
+    const schedule = () => {
+      if (rafId.current === null) rafId.current = requestAnimationFrame(apply);
+    };
 
     const move = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      if (!visible) setVisible(true);
-      const target = e.target as HTMLElement;
-      setIsPointer(!!target.closest("a, button, [data-cursor='pointer']"));
+      pos.current.x = e.clientX;
+      pos.current.y = e.clientY;
+      schedule();
     };
-    const leave = () => setVisible(false);
 
-    window.addEventListener("mousemove", move);
+    const leave = () => {
+      if (glowRef.current) glowRef.current.style.opacity = "0";
+    };
+
+    const over = (e: MouseEvent) => {
+      isPointer.current = !!(e.target as HTMLElement).closest("a, button, [data-cursor='pointer']");
+      schedule();
+    };
+
+    window.addEventListener("mousemove", move, { passive: true });
     document.documentElement.addEventListener("mouseleave", leave);
+    document.documentElement.addEventListener("mouseover", over, { passive: true });
     return () => {
       window.removeEventListener("mousemove", move);
       document.documentElement.removeEventListener("mouseleave", leave);
+      document.documentElement.removeEventListener("mouseover", over);
+      if (rafId.current !== null) cancelAnimationFrame(rafId.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (typeof window !== "undefined" && !window.matchMedia("(pointer: fine)").matches) {
-    return null;
-  }
-
   return (
-    <motion.div
-      aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[999] hidden md:block"
-      style={{ x: springX, y: springY, opacity: visible ? 1 : 0 }}
-      transition={{ opacity: { duration: 0.3 } }}
-    >
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-[999] hidden md:block">
       <div
-        className="-translate-x-1/2 -translate-y-1/2 rounded-full transition-[width,height] duration-300 ease-out"
+        ref={glowRef}
+        className="absolute left-0 top-0 size-[140px] rounded-full opacity-0 transition-[opacity,transform] duration-300 ease-out"
         style={{
-          width: isPointer ? 220 : 140,
-          height: isPointer ? 220 : 140,
           background:
             "radial-gradient(circle, rgba(56,189,248,0.16) 0%, rgba(30,79,255,0.10) 45%, transparent 72%)",
         }}
       />
       <div
-        className="absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-light transition-transform duration-200"
-        style={{ transform: `translate(-50%, -50%) scale(${isPointer ? 1.8 : 1})` }}
+        ref={dotRef}
+        className="absolute left-0 top-0 size-2 rounded-full bg-cyan-light transition-transform duration-200 ease-out"
       />
-    </motion.div>
+    </div>
   );
 }
